@@ -1,39 +1,37 @@
 graph = {
-    'Arad': {'Zerind', 'Sibiu', 'Timisoara'},
-    'Zerind': {'Oradea', 'Arad'},
-    'Oradea': {'Zerind', 'Sibiu'},
-    'Sibiu': {'Arad', 'Oradea', 'Fagaras', 'Rimnicu Vilcea'},
-    'Timisoara': {'Arad', 'Lugoj'},
-    'Lugoj': {'Timisoara', 'Mehadia'},
-    'Mehadia': {'Lugoj', 'Dobreta'},
-    'Dobreta': {'Mehadia', 'Craiova'},
-    'Craiova': {'Dobreta', 'Rimnicu Vilcea', 'Pitesti'},
-    'Rimnicu Vilcea': {'Sibiu', 'Craiova', 'Pitesti'},
-    'Fagaras': {'Sibiu', 'Bucharest'},
-    'Pitesti': {'Rimnicu Vilcea', 'Craiova', 'Bucharest'},
-    'Bucharest': {'Fagaras', 'Pitesti', 'Giurgiu', 'Urziceni'},
-    'Giurgiu' : {'Bucharest'},
-    'Urziceni' : {'Bucharest', 'Hirsova', 'Vaslui'},
-    'Hirsova' : {'Urziceni', 'Eforie'},
-    'Eforie' : {'Hirsova'},
-    'Vaslui' : {'Urziceni', 'Lasi'},
-    'Lasi' : {'Vaslui', 'Neamt'},
-    'Neamt' : {'Lasi'}
+    'Arad': ['Zerind', 'Sibiu', 'Timisoara'],
+    'Zerind': ['Oradea', 'Arad'],
+    'Oradea': ['Zerind', 'Sibiu'],
+    'Sibiu': ['Arad', 'Oradea', 'Fagaras', 'Rimnicu Vilcea'],
+    'Timisoara': ['Arad', 'Lugoj'],
+    'Lugoj': ['Timisoara', 'Mehadia'],
+    'Mehadia': ['Lugoj', 'Dobreta'],
+    'Dobreta': ['Mehadia', 'Craiova'],
+    'Craiova': ['Dobreta', 'Rimnicu Vilcea', 'Pitesti'],
+    'Rimnicu Vilcea': ['Sibiu', 'Craiova', 'Pitesti'],
+    'Fagaras': ['Sibiu', 'Bucharest'],
+    'Pitesti': ['Rimnicu Vilcea', 'Craiova', 'Bucharest'],
+    'Bucharest': ['Fagaras', 'Pitesti', 'Giurgiu', 'Urziceni'],
+    'Giurgiu': ['Bucharest'],
+    'Urziceni': ['Bucharest', 'Hirsova', 'Vaslui'],
+    'Hirsova': ['Urziceni', 'Eforie'],
+    'Eforie': ['Hirsova'],
+    'Vaslui': ['Urziceni', 'Lasi'],
+    'Lasi': ['Vaslui', 'Neamt'],
+    'Neamt': ['Lasi']
 }
-from queue import Queue
 
-def bfs_search(graph, start, goal):
-    frontier = Queue()
-    frontier.put(start)
-    visited = {}
+def bfs_search(graph, kota_awal, kota_tujuan):
+    queue = [kota_awal]
+    visited = []
     came_from = {}
-    visited[start] = True
-    came_from[start] = None
+    came_from[kota_awal] = None
     
-    while not frontier.empty():
-        current = frontier.get()
+    while len(queue) > 0:
+        current = queue[0]  # Ambil elemen pertama
+        queue = queue[1:]  # Hapus elemen pertama
         
-        if current == goal:
+        if current == kota_tujuan:
             path = []
             while current is not None:
                 path.append(current)
@@ -41,18 +39,19 @@ def bfs_search(graph, start, goal):
             path.reverse()
             return path
         
-        for neighbor in graph[current]:
-            if neighbor not in visited:
-                visited[neighbor] = True
-                came_from[neighbor] = current
-                frontier.put(neighbor)
+        if current not in visited:
+            visited.append(current)
+            for neighbor in graph[current]:
+                if neighbor not in visited and neighbor not in queue:
+                    queue.append(neighbor)
+                    came_from[neighbor] = current
     
     return None
 
-start = input("masukkan kota asal: ")
-goal = input("masukkan kota tujuan:")
-path = bfs_search(graph, start, goal)
+kota_awal = input("Masukkan kota asal: ")
+kota_tujuan = input("Masukkan kota tujuan: ")
+path = bfs_search(graph, kota_awal, kota_tujuan)
 if path:
-    print("path from", start, "to", goal, ":", path)
+    print("Jalur dari", kota_awal, "ke", kota_tujuan, ":", path)
 else:
-    print("No path found from", start, "to", goal)
+    print("Tidak ada jalur dari", kota_awal, "ke", kota_tujuan)
