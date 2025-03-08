@@ -28,8 +28,8 @@ def bfs_search(graph, kota_awal, kota_tujuan):
     came_from[kota_awal] = None
     
     while len(queue) > 0:
-        current = queue[0]  # Ambil elemen pertama
-        queue = queue[1:]  # Hapus elemen pertama
+        current = queue[0] 
+        queue = queue[1:]  
         
         if current == kota_tujuan:
             path = []
